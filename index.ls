@@ -69,8 +69,9 @@ angular.module \twstat, <[]>
           d[k] = if isNaN(parseFloat(d[k])) => 0 else parseFloat(d[k])
         csv.keys = [k for k,v of csv.data.0].filter(->it!=\年度)
         csv.yearrange = d3.extent(csv.data.map(->parseInt(it["年度"])))
+
         csv.valuerange = d3.extent(csv.data
-          .map (d) -> csv.keys.map(->d[it])
+          .map (d) -> $scope.city5.map(->d[it])
           .reduce(((a,b) -> a ++ b ), [])
         )
         csv.parsed = csv.keys.map (k) -> {name: k, data: csv.data.map(->
