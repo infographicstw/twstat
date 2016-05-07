@@ -1,16 +1,47 @@
 doctype html
-html
-  head
+//- basic libraries: jquery(1.10.2), d3js(3.5.4), angularjs(1.2.3), bootstrap(3.0)/semantic-ui(0.9.3/0.9.5)
+//-                  fontawesome(4.4.0), reactjs(0.14.0)
+- var use = { cdn: true, og: true, favicon: true }
+- var lib = { jquery: true, d3js: true, angular: true, bootstrap: true, semantic: false, fontawesome: true, reactjs: false }
+- var assets = "assets"
+- var favicon = "thumbnail.png"
+- var title = "twstat"
+- var og = {}
+- og.title = title
+- og.twitter = {type: "summary_large_image", site: "@infographicstw", creator: "@infographicstw"}
+- og.domain = "data.infographics.tw"
+- og.url = ""
+- og.thumbnail = {width: 200, height: 200, type: "image/png"}
+- og.thumbnail.url = "thumbnail.png"
+- og.author = "infographicstw"
+- og.section = "Taiwan"
+- og.keyword = "infographics.tw,template"
+- og.description = ""
+html(lang="en")
+  head(prefix="og: http://ogp.me/ns#")
     meta(charset="utf-8")
-    script(src="js/jquery.1.8.2.js")
-    script(src="js/bootstrap.js")
-    script(src="js/d3.v3.min.js")
-    script(src="js/underscore-min.js")
-    script(src="js/px.min.js")
-    script(src="index.js")
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title= title
+    // libraries
+    include library.jade
+    // custom files
     link(rel="stylesheet",type="text/css",href="index.css")
-  body
-    h3#index-name 隨機挑選指標資料中...
-    select#index-chooser: option(value="0") 選擇分類
-    select#year-chooser: option(value="0") 選擇年份
-    #content
+    script(type="text/javascript",src="index.js")
+  body(ng-app="twstat")
+    #root(ng-controller="twstatList")
+      h1 縣市重要統計指標 #[small 1998 ~ 2014]
+      .row
+        .col-sm-4
+          .panel.panel-default: .panel-body
+            input.form-control(ng-model="filter",placeholder="透過搜尋來找資料吧！")
+            hr
+            #items
+              .item(ng-repeat="csv in csvs|filter:{name:filter}:false",
+              ng-click="toggle(csv)",ng-class="{'active':csv.active}")
+                .pull-right: a(ng-attr-href="csv/county/index/{{csv.name}}.csv") csv #[i.fa.fa-cloud-download]
+                span {{csv.name}}
+              .text-center 這就是全部囉 #[i.fa.fa-smile-o]
+              .text-center 哇，找不到～ #[i.fa.fa-frown-o]
+        .col-sm-8
+          .panel.panel-default: .panel-body
+            #vizs
